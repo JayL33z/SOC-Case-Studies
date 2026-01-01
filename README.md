@@ -10,4 +10,4 @@ Disclaimer: *The below case studies are based on simulated scenarios. The organi
 ## Contents
 
 - <a href="">SOC Case Study Report #001: </a>
-- <a href="">SOC Study Report #002: </a>
+- <a href="">SOC Case Study Report #002: </a>
