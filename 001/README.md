@@ -1,6 +1,6 @@
 # Content
 1. [Scenario](#scenario)
-2. [Incident Response](#incident-response)
+2. [Incident Response Narrative](#incident-response)
 3. [Lessons Learned](#lessons-learned)
 
 ## 1. Scenario<a id='scenario'></a>
@@ -12,10 +12,11 @@ I. Could the file be a malware? What is it trying to do? <br>
 II. Why did none of the cybersecurity technologies detected and stopped this? <br>
 III. How to prevent this from happening? <br>
 
-## 2. Incident Response<a id='incident-response'></a>
+## 2. Incident Response Narrative<a id='incident-response'></a>
 ### 2.1. Identification
 
 ### Identification source: Email
+Emails can be retriev
 
 ### Identification source: Host
 
