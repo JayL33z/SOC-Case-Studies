@@ -1,6 +1,6 @@
 # Content
 1. [Scenario](#scenario)
-2. [Incident Response](#incident-response)
+2. [Incident Response Narrative](#incident-response)
 3. [Lessons Learned](#lessons-learned)
 
 ## 1. Scenario<a id='scenario'></a>
@@ -12,7 +12,7 @@ I.	Has the web server already been compromised before the alert? <br>
 II.	Did the adversary breach into the internal network? <br>
 III.	What could have been done to detect this even before the ingestion of IOCs from external threat intelligence?
 
-## 2. Incident Response<a id='incident-response'></a>
+## 2. Incident Response Narrative<a id='incident-response'></a>
 ### 2.1. Identification
 
 ### Identification source: Email
