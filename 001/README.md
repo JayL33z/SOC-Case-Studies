@@ -114,8 +114,9 @@ And hence while further investigation can be performed to uncover the risk and f
 ### 2.2. Containment
 The incident responder is brought in to limit the spread and impact of the incident.
 #### Containment: Email
-As per the playbook, the email security solution/gateway was configured to block the sender regardless of whether the source is legitimate.
-> Analyst notes: As the sender is a legitimate vendor, it is likely that his email account had already been compromised and hence used by the attacker to send out malicious emails. 
+As per the playbook, the email security solution/gateway was configured to explicitly block the sender regardless of whether the source is legitimate.
+> Analyst notes: As the sender is a legitimate vendor, it is likely that his email account had already been compromised and hence used by the attacker to send out malicious emails.
+Also, escalate to the suitable personnel to notify the vendor.
 
 #### Containment: Endpoint
 As per the playbook, the endpoint security solution was set to contain the system administrator's endpoint. This isolates the endpoint from the rest of the subnet to both prevent the malware from spreading and prevent the attacker from pivoting into the internal network from the infected endpoint.
@@ -148,7 +149,7 @@ Then repeat to conduct investigation, containment, and eradication on those indi
 
 ### 2.4. Recovery
 After iteratively investigating, containing and eradicating, once there is strong confidence that the root cause and any attacker's traces of the incident are no longer present, system owners work with IR to bring securely systems and services back online.
-For example, end the endpoint containment of the affected system, renable the affected system administrator's user account etc.
+For example, release of the affected system from containment, renable the affected system administrator's user account etc.
 
 ## 3. Lessons Learned<a id='lessons-learned'></a>
 The lessons learned are structured in a format to address the stakeholder's key concerns.
@@ -166,9 +167,9 @@ Answer:
 
 II. Why did none of the cybersecurity technologies detected and stopped this? <br>
 Answer: 
-- The email security solution was configured to whitelist the sender domain because it is from the legitimate vendor. This was made to bypass thorough automated email analysis to reduce the time required for emails to be received from this vendor.
+- The email security solution was configured to whitelist the sender domain because it is from the legitimate vendor. This decision was made to bypass thorough automated email analysis to reduce the time required for emails to be received from this vendor.
 - The endpoint security solution failed to detect because the file XXXX_Troubleshooting_Guidev2.pdf.exe is a custom payload without a known hash signature.
-- The network security solution failed to detect because while the network security policy blacklists most inbound initiated traffic, outbound initiated traffic is lax. This allowed users from internal network to easily initiate connections or download from external resources. 
+- While the network security solution blacklists most inbound initiated traffic, outbound initiated traffic is lax. This allowed users from internal network to easily initiate connections or download from external resources. 
 <br>
 
 III. How to prevent this from happening? <br>
