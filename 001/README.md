@@ -86,11 +86,11 @@ However, then there was a time gap of about two minutes before the next event wh
 <img width="905" height="591" alt="image" src="https://github.com/user-attachments/assets/8ef23c60-ea89-4f38-b6d8-6c355e188a71" />
 
 In between these time gaps, there were no events captured. Here are some possibilities why: <br>
-i. There was a technical bug with the endpoint security solution, tool or OS which is more common than vendors are willing to admit. <br>
+i. There was a technical bug with the endpoint security solution, tool or OS. <br>
 ii. The attacker had hastily deleted some event logs. <br>
 iii. Certain activities are not configured to be logged based on how existing configurations is set. <br>
 
-Thus, between the time period of creation and deletion of the user cisco_support, it is very likely that the attacker would have taken further actions on the system before deleting this user account.
+Thus, between the time period of creation and deletion of the user cisco_support, it is very likely that the attacker could have taken further actions on the system before deleting this user account.
 
 > Analyst notes: Whatever the true reason for gaps in system events should be left for further investigation during the incident post mortem. This may involve re-evaluating the Preparation Phase of the IR plan
 
@@ -155,27 +155,27 @@ For example, release of the affected system from containment, renable the affect
 ## 3. Lessons Learned<a id='lessons-learned'></a>
 The lessons learned are structured in a format to address the stakeholder's key concerns.
 
-I. Could the file be a malware? What is it trying to do? <br>
-Answer: 
+I. Could the file be a malware? What is it trying to do?
+<br>
 - Yes, it is a confirmed malware.
-- Based on the observed evidence from sysmon event logs and network packet capture, the malware:
-  i.  First initiated a reverse shell to a remote IP address,
-  ii. Then executed remote commands to add a new admin user
-  iii. Beaconed back to its CnC
-  iv. Deleting the added admin user.
+- Based on the observed evidence from sysmon event logs and network packet capture, the malware: <br>
+  i.  First initiated a reverse shell to a remote IP address  <br>
+  ii. Then executed remote commands to add a new admin user  <br>
+  iii. Beaconed back to its CnC  <br>
+  iv. Deleted the newly added admin user  <br>
 - While SOC was able to respond and stop the malware before it took any further actions beyond the observed behaviours, a thorough malware analysis is recommended in order to understand more about the full extent of malware's intended behaviour.
 <br>
 
-II. Why did none of the cybersecurity technologies detected and stopped this? <br>
-Answer: 
+II. Why did none of the cybersecurity technologies detected and stopped this?
+<br>
 - The email security solution was configured to whitelist the sender domain because it is from the legitimate vendor. This decision was made to bypass thorough automated email analysis to reduce the time required for emails to be received from this vendor.
 - The endpoint security solution failed to detect because the file XXXX_Troubleshooting_Guidev2.pdf.exe is a custom payload without a known hash signature.
-- While the network security solution blacklists most inbound initiated traffic, outbound initiated traffic is lax. This allowed users from internal network to easily initiate connections or download from external resources. 
+- While the network security solution blacklisted most inbound initiated traffic, outbound initiated traffic is lax. This allowed endpoints from internal network to easily initiate connections or download from external resources. 
 <br>
 
-III. How to prevent this from happening? <br>
-Answer:
-- Do not allow any sender domains to bypass the thorough analysis function of email security solution regardless of whether it is a legitimate vendor, since email accounts of external parties can be compromised to be used as leverage.
+III. How to prevent this from happening?
+<br>
+- Do not allow any sender domains to bypass the thorough analysis function of the email security solution regardless of whether it is a legitimate vendor. This is because email accounts of external parties can be compromised to be used as leverage.
 - The efficacy of the endpoint security solution must be reconsidered. Beyond just signature-based hash detection, the solution needs to be able to detect higher levels on the Pyramid of Pain (https://detect-respond.blogspot.com/2013/03/the-pyramid-of-pain.html) so that attacker evasion techniques are less effective.
 - A strict whitelisting approach on the network security solution for user access to external resources is reccomended.
 <br>
