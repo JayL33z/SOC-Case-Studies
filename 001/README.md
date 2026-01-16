@@ -156,21 +156,24 @@ The lessons learned are structured in a format to address the stakeholder's key 
 I. Could the file be a malware? What is it trying to do? <br>
 Answer: 
 - Yes, it is a confirmed malware.
-- Based on the observed evidence from Sysmon event logs and network packet capture, 
-
-- While SOC was able to respond and stop the malware before it took any further actions beyond beaconing back to its CnC, a thorough malware analysis is recommended in order to understand more about the malware's intended behaviour.
+- Based on the observed evidence from sysmon event logs and network packet capture, the malware:
+  i.  First initiated a reverse shell to a remote IP address,
+  ii. Then executed remote commands to add a new admin user
+  iii. Beaconed back to its CnC
+  iv. Deleting the added admin user.
+- While SOC was able to respond and stop the malware before it took any further actions beyond the observed behaviours, a thorough malware analysis is recommended in order to understand more about the full extent of malware's intended behaviour.
 <br>
 
 II. Why did none of the cybersecurity technologies detected and stopped this? <br>
 Answer: 
 - The email security solution was configured to whitelist the sender domain because it is from the legitimate vendor. This was made to bypass thorough automated email analysis to reduce the time required for emails to be received from this vendor.
 - The endpoint security solution failed to detect because the file XXXX_Troubleshooting_Guidev2.pdf.exe is a custom payload without a known hash signature.
-- The network security solution failed to detect because while the network security policy blacklists most inbound initiated traffic, outbound initiated traffic is lax. This allowed users from internal network to easily initiate connections and download from external resources. 
+- The network security solution failed to detect because while the network security policy blacklists most inbound initiated traffic, outbound initiated traffic is lax. This allowed users from internal network to easily initiate connections or download from external resources. 
 <br>
 
 III. How to prevent this from happening? <br>
 Answer:
-- Do not allow any sender domains to bypass the thorough analysis feature of email security solution regardless of whether it is a legitimate vendor, since email accounts of external parties can be compromised.
+- Do not allow any sender domains to bypass the thorough analysis function of email security solution regardless of whether it is a legitimate vendor, since email accounts of external parties can be compromised to be used as leverage.
 - The efficacy of the endpoint security solution must be reconsidered. Beyond just signature-based hash detection, the solution needs to be able to detect higher levels on the Pyramid of Pain (https://detect-respond.blogspot.com/2013/03/the-pyramid-of-pain.html) so that attacker evasion techniques are less effective.
-- A strict whitelisting approach on the network security solution for access to external resources is reccomended. 
+- A strict whitelisting approach on the network security solution for user access to external resources is reccomended.
 <br>
