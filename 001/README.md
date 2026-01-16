@@ -58,7 +58,7 @@ The sender uses a legitimate file sharing service File.IO (https://www.file.io/)
 
 
 ### Identification source: Host
-From the endpoint detection and response (EDR) solution, the analyst can acquire Sysmon event logs (sysmon.evtx) during specific time frames from the system administrator’s endpoint to investigate. 
+From the endpoint detection and response (EDR) solution, the analyst can acquire Sysmon event logs (.evtx) during specific time frames from the system administrator’s endpoint to investigate. 
 This would provide evidence to the series of events which occurred.
 
 The below events indicates that the file was downloaded from hxxps://file.io/XXXXXX by the information from the zone identifier.
@@ -86,7 +86,7 @@ However, then there was a time gap of about two minutes before the next event wh
 <img width="905" height="591" alt="image" src="https://github.com/user-attachments/assets/8ef23c60-ea89-4f38-b6d8-6c355e188a71" />
 
 In between these time gaps, there were no events captured. Here are some possibilities why: <br>
-i. There was a technical bug with the endpoint security solution or OS which is more common than vendors are willing to admit. <br>
+i. There was a technical bug with the endpoint security solution, tool or OS which is more common than vendors are willing to admit. <br>
 ii. The attacker had hastily deleted some event logs. <br>
 iii. Certain activities are not configured to be logged based on how existing configurations is set. <br>
 
@@ -94,14 +94,48 @@ Thus, between the time period of creation and deletion of the user cisco_support
 
 > Analyst notes: Whatever the true reason for gaps in system events should be left for further investigation during the incident post mortem. This may involve re-evaluating the Preparation Phase of the IR plan
 
-**Due to time-urgency of an IR, the analyst needs to be adaptable and re-orient the investigation to other data sources such as network logs etc..**
+> Analyst notes: **Due to time-urgency of an IR, the analyst needs to be adaptable and re-orient the investigation to other data sources such as network logs etc. if there is insufficient findings from any one source**
 
 
 ### Identification source: Network
+From the network detection and response (NDR) solution, the analyst can acquire network packet captures (.pcap) during specific time frames to investigate network traffic from and to the endpoint.
+In this case, the analyst focused on the time gap of missing events as per the endpoint investigation by using WireShark.
+
+After the initial download of XXXX_Troubleshooting_Guidev2.pdf.exe, it was further observed that affected endpoint was making frequent http connections (POST requests) to URL: hxxp[://]cm32792[.]tw1[.]ru/beacon which has a bad reputation on VirusTotal. This is observed to be beaconing to the attacker's Command-and-Control (CNC) server.
+And the user agent making the connections on the endpoint is *DarkTortilla* (https://attack.mitre.org/software/S1066/), which is a known .NET-based crypter designed to encrypt and obfuscate malware payloads to evade detection by endpoint security.
+<img width="1479" height="544" alt="image" src="https://github.com/user-attachments/assets/e0faf6c8-e479-4a7b-89a3-103a357526d3" />
+<img width="1294" height="874" alt="image" src="https://github.com/user-attachments/assets/40b1bab8-484b-424d-80bd-33477925bb40" />
+
+
+**At this stage, there is clear and sufficient evidence that the endpoint had been infected by malware. And this is a true positive cyber incident.
+And hence while further investigation can be performed to uncover the risk and further extent of the attack, there is a strong justification to activate the Incident Response (IR) Team.**
 
 
 ### 2.2. Containment
+The incident responder is brought in to limit the spread and impact of the incident.
+### Containment: Email
+As per the playbook, the email security solution/gateway was configured to block the sender regardless of whether the source is legitimate.
+> Analyst notes: As the sender is a legitimate vendor, it is likely that his email account had already been compromised and hence used by the attacker to send out malicious emails. 
+
+### Containment: Endpoint
+As per the playbook, the endpoint security solution was set to contain the system administrator's endpoint. This isolates the endpoint from the rest of the subnet to both prevent the malware from spreading and prevent the attacker from pivoting into the internal network from the infected endpoint.
+> Analyst notes: The containment of live servers have greater service disruptions as compared to the containment of client machines. Hence the plan for containment must be carefully thought-out during the preparation phase.
+
+### Containment: Network
+As per the playbook, the network security solution such as IPS/IDS, firewalls were set to block the known malicious domains/IP addresses on the network level. 
+> Analyst notes: Blocking on network level effectively stops any beaconing to the attacker's CnC and prevents any further remote action from the attacker. Also it reduces likelihood of other users accessing and downloading the malware.
+
 ### 2.3. Eradication
+The incident responder thoroughly investigates to remove the root cause and any traces of the incident from affected systems.
+
+### Containment: Email
+
+
+### Containment: Endpoint
+
+
+### Containment: Network
+
 ### 2.4. Recovery
 
 ## 3. Lessons Learned<a id='lessons-learned'></a>
