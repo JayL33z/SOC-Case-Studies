@@ -136,14 +136,41 @@ The incident responder thoroughly investigates to remove the root cause and any 
 Investigate the affected system administrator's email account such as Sent emails, Outbox etc. to check if any further malicious emails were sent to any other internal or external recipients. Notify and escalate accordingly.
 
 #### Eradication: Endpoint
-Remove all known malicious artifacts from the affected system, for example in this case, XXXX_Troubleshooting_Guidev2.pdf.exe.
+Remove all known malicious artifacts from the affected system, for example in this case, XXXX_Troubleshooting_Guidev2.pdf.exe. This can be done manually or add custom rules on endpoint security solutions to target its removal.
 > Analyst notes: However before removing, if required by IR to perform malware analysis in order to thoroughly understand malware behaviour, ensure that a copy of the malware is securely stored first for safe analysis.
+
+Also, persistence mechanisms must be investigated and eradicated as well. 
+For example, to check Windows registry hives such as *HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnce* and *HKLM\Software\Microsoft\Windows\CurrentVersion\Run* on any abnormal entries. 
 
 #### Eradication: Network
 Investigate network-based logs such as firewall logs, or network event logs on the endpoint itself to check any suspiscious connections from the infected endpoint to other systems in the network. 
 Then repeat to conduct investigation, containment, and eradication on those individual systems (endpoints) as required.
 
 ### 2.4. Recovery
-
+After iteratively investigating, containing and eradicating, once there is strong confidence that the root cause and any attacker's traces of the incident are no longer present, system owners work with IR to bring securely systems and services back online.
+For example, end the endpoint containment of the affected system, renable the affected system administrator's user account etc.
 
 ## 3. Lessons Learned<a id='lessons-learned'></a>
+The lessons learned are structured in a format to address the stakeholder's key concerns.
+
+I. Could the file be a malware? What is it trying to do? <br>
+Answer: 
+- Yes, it is a confirmed malware.
+- Based on the observed evidence from Sysmon event logs and network packet capture, 
+
+- While SOC was able to respond and stop the malware before it took any further actions beyond beaconing back to its CnC, a thorough malware analysis is recommended in order to understand more about the malware's intended behaviour.
+<br>
+
+II. Why did none of the cybersecurity technologies detected and stopped this? <br>
+Answer: 
+- The email security solution was configured to whitelist the sender domain because it is from the legitimate vendor. This was made to bypass thorough automated email analysis to reduce the time required for emails to be received from this vendor.
+- The endpoint security solution failed to detect because the file XXXX_Troubleshooting_Guidev2.pdf.exe is a custom payload without a known hash signature.
+- The network security solution failed to detect because while the network security policy blacklists most inbound initiated traffic, outbound initiated traffic is lax. This allowed users from internal network to easily initiate connections and download from external resources. 
+<br>
+
+III. How to prevent this from happening? <br>
+Answer:
+- Do not allow any sender domains to bypass the thorough analysis feature of email security solution regardless of whether it is a legitimate vendor, since email accounts of external parties can be compromised.
+- The efficacy of the endpoint security solution must be reconsidered. Beyond just signature-based hash detection, the solution needs to be able to detect higher levels on the Pyramid of Pain (https://detect-respond.blogspot.com/2013/03/the-pyramid-of-pain.html) so that attacker evasion techniques are less effective.
+- A strict whitelisting approach on the network security solution for access to external resources is reccomended. 
+<br>
