@@ -15,7 +15,7 @@ III. How to prevent this from happening? <br>
 ## 2. Incident Response Narrative<a id='incident-response'></a>
 ### 2.1. Identification
 
-### Identification source: Email
+#### Identification source: Email
 As an alternative to the system administrator manually handing over the suspicious email to the SOC for investigation through a secure channel, the SOC analyst can also retrieve a copy of emails from the email security solution which acts as a gateway for inbound emails to the company’s domain in a controlled, auditable way that balances security needs, privacy, and legal requirements. The email body is as follows:
 
 ```
@@ -33,11 +33,11 @@ Solution Consultant
 The email was further analysed based on the below methodology:
 
 
-#### 1.	Content/Contextual Examination
+##### 1.	Content/Contextual Examination
 While the language used is in a casual tone, the email body looks legitimate as the vendor’s consultant Marcus is known in-person by the system administrator.
 Also, there are no signs of social engineering red flags such as the request for urgent action, the promise of personal rewards etc.
 
-#### 2.	Sender and Header Examination
+##### 2.	Sender and Header Examination
 The analyst checked by inspecting the email header using a parser such as https://mxtoolbox.com/EmailHeaders.aspx to identify the true origins. Specifically, the following fields are checked: <br>
 i.	Date <br>
 ii.	From <br>
@@ -52,12 +52,12 @@ However, nothing out of the ordinary was observed compared to other prior emails
 The analyst further checked sender authenticity such as Sender Policy Framework (SPF), DomainKeys Identified Mail (DKIM), Domain-based Message Authentication, Reporting & Conformance (DMARC) in MX records (https://mxtoolbox.com/SuperTool.aspx). However, these records were found to be clean at the time of investigation.
 This is indicative with high confidence that the email indeed came from the vendor’s email domain with clean reputation.
 
-#### 3.	URL Examination
+##### 3.	URL Examination
 The sender uses a legitimate file sharing service File.IO (https://www.file.io/). However, during the time of investigation, the file being shared had been removed online and was no longer downloadable by the analyst.
 
 
 
-### Identification source: Host
+#### Identification source: Host
 From the endpoint detection and response (EDR) solution, the analyst can acquire Sysmon event logs (.evtx) during specific time frames from the system administrator’s endpoint to investigate. 
 This would provide evidence to the series of events which occurred.
 
@@ -97,7 +97,7 @@ Thus, between the time period of creation and deletion of the user cisco_support
 > Analyst notes: **Due to time-urgency of an IR, the analyst needs to be adaptable and re-orient the investigation to other data sources such as network logs etc. if there is insufficient findings from any one source**
 
 
-### Identification source: Network
+#### Identification source: Network
 From the network detection and response (NDR) solution, the analyst can acquire network packet captures (.pcap) during specific time frames to investigate network traffic from and to the endpoint.
 In this case, the analyst focused on the time gap of missing events as per the endpoint investigation by using WireShark.
 
@@ -113,29 +113,37 @@ And hence while further investigation can be performed to uncover the risk and f
 
 ### 2.2. Containment
 The incident responder is brought in to limit the spread and impact of the incident.
-### Containment: Email
+#### Containment: Email
 As per the playbook, the email security solution/gateway was configured to block the sender regardless of whether the source is legitimate.
 > Analyst notes: As the sender is a legitimate vendor, it is likely that his email account had already been compromised and hence used by the attacker to send out malicious emails. 
 
-### Containment: Endpoint
+#### Containment: Endpoint
 As per the playbook, the endpoint security solution was set to contain the system administrator's endpoint. This isolates the endpoint from the rest of the subnet to both prevent the malware from spreading and prevent the attacker from pivoting into the internal network from the infected endpoint.
 > Analyst notes: The containment of live servers have greater service disruptions as compared to the containment of client machines. Hence the plan for containment must be carefully thought-out during the preparation phase.
 
-### Containment: Network
+#### Containment: Network
 As per the playbook, the network security solution such as IPS/IDS, firewalls were set to block the known malicious domains/IP addresses on the network level. 
-> Analyst notes: Blocking on network level effectively stops any beaconing to the attacker's CnC and prevents any further remote action from the attacker. Also it reduces likelihood of other users accessing and downloading the malware.
+> Analyst notes: Blocking on network level effectively stops any beaconing to the attacker's CnC and prevents any further remote action from the attacker. Also it reduces likelihood of other users/endpoints from accessing and downloading the malware.
+
+#### Containment: User account
+Temporarily disable the affected system administrator's user account.
+> Analyst notes: Attacker could have harvested the system administrator's credentials and hence further authenticate it on other systems especially if same domain user accounts are used across systems.
 
 ### 2.3. Eradication
 The incident responder thoroughly investigates to remove the root cause and any traces of the incident from affected systems.
 
-### Containment: Email
+#### Eradication: Email
+Investigate the affected system administrator's email account such as Sent emails, Outbox etc. to check if any further malicious emails were sent to any other internal or external recipients. Notify and escalate accordingly.
 
+#### Eradication: Endpoint
+Remove all known malicious artifacts from the affected system, for example in this case, XXXX_Troubleshooting_Guidev2.pdf.exe.
+> Analyst notes: However before removing, if required by IR to perform malware analysis in order to thoroughly understand malware behaviour, ensure that a copy of the malware is securely stored first for safe analysis.
 
-### Containment: Endpoint
-
-
-### Containment: Network
+#### Eradication: Network
+Investigate network-based logs such as firewall logs, or network event logs on the endpoint itself to check any suspiscious connections from the infected endpoint to other systems in the network. 
+Then repeat to conduct investigation, containment, and eradication on those individual systems (endpoints) as required.
 
 ### 2.4. Recovery
+
 
 ## 3. Lessons Learned<a id='lessons-learned'></a>
