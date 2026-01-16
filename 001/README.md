@@ -137,7 +137,8 @@ The incident responder thoroughly investigates to remove the root cause and any 
 Investigate the affected system administrator's email account such as Sent emails, Outbox etc. to check if any further malicious emails were sent to any other internal or external recipients. Notify and escalate accordingly.
 
 #### Eradication: Endpoint
-Remove all known malicious artifacts from the affected system, for example in this case, XXXX_Troubleshooting_Guidev2.pdf.exe. This can be done manually or add custom rules on endpoint security solutions to target its removal.
+Remove all known malicious artifacts and kill all its processes/sub-processes from the affected system. For example in this case, XXXX_Troubleshooting_Guidev2.pdf.exe. 
+This can be done manually or add custom rules on endpoint security solutions to target its removal.
 > Analyst notes: However before removing, if required by IR to perform malware analysis in order to thoroughly understand malware behaviour, ensure that a copy of the malware is securely stored first for safe analysis.
 
 Also, persistence mechanisms must be investigated and eradicated as well. 
