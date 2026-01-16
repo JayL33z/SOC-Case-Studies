@@ -88,7 +88,7 @@ However, then there was a time gap of about two minutes before the next event wh
 In between these time gaps, there were no events captured. Here are some possibilities why: <br>
 i. There was a technical bug with the endpoint security solution or OS which is more common than vendors are willing to admit. <br>
 ii. The attacker had hastily deleted some event logs. <br>
-iii. Certain activities are not configured to be logged by Sysmon based on existing configurations is set. <br>
+iii. Certain activities are not configured to be logged based on how existing configurations is set. <br>
 
 Thus, between the time period of creation and deletion of the user cisco_support, it is very likely that the attacker would have taken further actions on the system before deleting this user account.
 
