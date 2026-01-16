@@ -76,9 +76,25 @@ Further analysis down the timeline found that malware was eventually executed (S
 Then the malware made connection to external IP address X.X.X.X on destination port XXXX as per (Sysmon Event ID 3: Network Connection Detected)
 <img width="989" height="575" alt="image" src="https://github.com/user-attachments/assets/d39107a4-26d7-436a-9cb7-1f96aa97cbc7" />
 
+And from the event logs, it was observed that the attacker added a new local user account XXXXX_support. <br>
+<img width="673" height="444" alt="image" src="https://github.com/user-attachments/assets/fe221f33-ad2a-4bed-8df1-f6efb6a8a7a9" />
 
+And added the new local user account to the local Administrators group. <br>
+<img width="657" height="431" alt="image" src="https://github.com/user-attachments/assets/d1a9056f-23a0-47d4-99d7-a22d67375ab4" />
+<br>
+However, then there was a time gap of about two minutes before the next event which showed that the attacker-added user account was deleted. <br>
+<img width="905" height="591" alt="image" src="https://github.com/user-attachments/assets/8ef23c60-ea89-4f38-b6d8-6c355e188a71" />
 
+In between these time gaps, there were no events captured. Here are some possibilities why: <br>
+i. There was a technical bug with the endpoint security solution or OS which is more common than vendors are willing to admit. <br>
+ii. The attacker had hastily deleted some event logs. <br>
+iii. Certain activities are not configured to be logged by Sysmon based on existing configurations is set. <br>
 
+Thus, between the time period of creation and deletion of the user cisco_support, it is very likely that the attacker would have taken further actions on the system before deleting this user account.
+
+> Analyst notes: Whatever the true reason for gaps in system events should be left for further investigation during the incident post mortem. This may involve re-evaluating the Preparation Phase of the IR plan
+
+**Due to time-urgency of an IR, the analyst needs to be adaptable and re-orient the investigation to other data sources such as network logs etc..**
 
 
 ### Identification source: Network
