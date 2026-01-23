@@ -15,12 +15,28 @@ III.	What could have been done to detect this even before the ingestion of IOCs 
 ## 2. Incident Response Narrative<a id='incident-response'></a>
 ### 2.1. Identification
 
-### Identification source: Email
+### Identification source: SIEM
 
-### Identification source: Host
+SOC searched on the SIEM (Splunk Search) with a date/time range that covers the period which the match for the IP address was detected on the EDR.
+Then a general query with the specific index and host name for the web server in question.
 
-### Identification source: Network
+<br> Splunk Query: ```index="XXXX-web" host="WEB-XXXX-01" ``` <br>
 
+As per below screenshot, the logs which are piped from the web server to the SIEM are *access.log*.
+
+<img width="848" height="537" alt="image" src="https://github.com/user-attachments/assets/13ec5732-e926-4aab-aba5-a321e1c5e68e" />
+
+Using the *Interesting Fields* feature under *clientip*,  SOC observed that the IP address 23[.]254[.]226[.]90 from external threat intelligence has abnormal high log volume on the web server within this time as compared to the other client IP addresses.
+<img width="1220" height="531" alt="image" src="https://github.com/user-attachments/assets/94d5f7e1-05a8-4b8a-85a6-da268b06021a" />
+
+
+This suggests that 23[.]254[.]226[.]90 had accessed the webserver the most during that period which is highly suspicious.
+>Analyst notes: The first thing that comes to mind from such high volume of web requests are either attempts for brute-force attack or Denial-of-Service (DoS) attackers.
+Then SOC did a search for 23[.]254[.]226[.]90 on VirusTotal to check its reputation.
+
+<img width="1024" height="534" alt="image" src="https://github.com/user-attachments/assets/6671b4a4-ea20-4a16-b684-5440a439f691" />
+
+From the above VT results, there is high confidence that web requests originates from an adversary at the time of investigation.
 
 ### 2.2. Containment
 ### 2.3. Eradication
