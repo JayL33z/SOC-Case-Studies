@@ -10,7 +10,7 @@ As per advisory from external threat intelligence, a cybersecurity engineer urge
 ### Key concerns from stakeholders: 
 I.	Has the web server already been compromised before the alert? <br>
 II.	Did the adversary breach into the internal network? <br>
-III.	What could have been done to detect this even before the ingestion of IOCs from external threat intelligence?
+III.	What could have been done to detect/prevent this even before the ingestion of IOCs from external threat intelligence?
 
 ## 2. Incident Response Narrative<a id='incident-response'></a>
 ### 2.1. Identification
@@ -99,8 +99,65 @@ This was to establish a reverse shell so that they can control the web server.
 
 <img width="1224" height="390" alt="image" src="https://github.com/user-attachments/assets/433f8d50-2268-49ab-9935-fa11d4a81b74" />
 
+**At this stage, there is clear and sufficient evidence that the web server was compromised. And this is a true positive cyber incident. And hence while deeper investigation can be performed to uncover the risk and further extent of the attack, there is a strong justification to activate the Incident Response (IR) Team.**
+
 ### 2.2. Containment
+The incident responder is brought in to limit the spread and impact of the incident.
+
+***Containment: Endpoint***
+
+As per the playbook, the endpoint security solution was set to contain the system administrator's server. 
+This isolates the endpoint from the rest of the subnet to both prevent the malware from spreading and prevent the attacker from pivoting into the internal network from the infected server.
+However, because this is a live web server, containment done must use very specific rules and processes to minimize service disruption. The plan must be carefully thought out during the preparation phase.
+For example, considerations include: 
+- During containment, is there a clean backup web server to failover to?
+- Can essential services on the web server still be online without increasing the risks on other systems?
+- What are the upstream and downstream dependencies that are going to be impacted during containment?
+
+Since in the first place, an LFI vulnerability on the web application leaked the credentials, implement temporary patches to mitigate it in the short term.
+For long term, patch the vulnerability based on best practice.
+
+***Containment: Network***
+
+As per the playbook, the network security solution such as IPS/IDS, perimeter firewalls can set to block the known malicious domains/IP addresses on the network level.
+
+>Analyst notes: Blocking on network level effectively stops any connection back to attacker's Command-and-Control (CnC) and prevents any further remote action from the attacker.
+
+***Containment: User account***
+
+Temporarily disable the affected web administrator's user account to prevent attacker's subsequent access to the web server's admin panel.
+Change all user passwords as required based on information of which credentials could have already been leaked due to LFI.
+
+
 ### 2.3. Eradication
+
+***Eradication: Endpoint***
+
+Remove all known malicious artifacts and kill all its processes/sub-processes from the affected system. 
+For example in this case, the attacker uploaded webshell *wp_webshell.php*. This can be done manually or add custom rules on endpoint security solutions to target its removal.
+
+>Analyst notes: However before removing, if required by IR to perform malware analysis in order to thoroughly understand malware behaviour, ensure that a copy of the malware is securely stored first for safe analysis.
+
+Also, persistence mechanisms must be investigated and eradicated as well. For example, since the web server is on Linux-based OS, search for suspiscious cron jobs, modified startup scripts etc.
+
+***Eradication: Network***
+Investigate network-based logs such as firewall logs, or network event logs in SIEM to check any suspiscious connections from the infected server to other systems in the network. Then repeat to conduct investigation, containment, and eradication on those individual systems (endpoints) as required.
+
+
 ### 2.4. Recovery
+After iteratively investigating, containing and eradicating, once there is strong confidence that the root cause and any attacker's traces of the incident are no longer present, system owners work with IR to bring securely systems and services back online. For example, release of the affected server from containment, re-enable the affected web admin account etc.
 
 ## 3. Lessons Learned<a id='lessons-learned'></a>
+The lessons learned are structured in a format to address the stakeholder's key concerns.
+
+I.	Has the web server already been compromised before the alert? <br>
+- Yes, the web server had been compromised prior to the alert from our endpoint security solution.
+- From the web server's access logs, SOC investigated that the attacker exploited a Local File Inclusion (LFI) vulnerability on the web server to leak credentials, which was then used to log into the Wordpress admin panel.
+- 
+II.	Did the adversary breach into the internal network? <br>
+- Till date, there is no evidence indicating that the adversary pivoted to other internal systems beyond just accessing the compromised public-facing web server.
+- However, it is recommended to place the web server into a demilitarized zone (DMZ) of the enterprise network so that any external-facing services are accessible to the public Internet but remaining isolated from the internal network.
+
+III.	What could have been done to detect/prevent this even before the ingestion of IOCs from external threat intelligence?
+- Highly recommend the use of a Web Application Firewall (WAF) security solution to detect and block network traffic with application-level attack signatures such as from LFI, SQL injections, XSS etc.
+- Based on criticality, ensure that security patches for all systems and applications must be implemented rapidly to mitigate risk as soon as possible.
