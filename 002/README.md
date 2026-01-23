@@ -136,7 +136,7 @@ Change all user passwords as required based on information of which credentials 
 Remove all known malicious artifacts and kill all its processes/sub-processes from the affected system. 
 For example in this case, the attacker uploaded webshell *wp_webshell.php*. This can be done manually or add custom rules on endpoint security solutions to target its removal.
 
->Analyst notes: However before removing, if required by IR to perform malware analysis in order to thoroughly understand malware behaviour, ensure that a copy of the malware is securely stored first for safe analysis.
+>Analyst notes: However before removing wp_webshell.php, if required by IR to perform malware analysis in order to thoroughly understand behaviour, ensure that a copy of the malware is securely stored first for safe analysis.
 
 Also, persistence mechanisms must be investigated and eradicated as well. For example, since the web server is on Linux-based OS, search for suspiscious cron jobs, modified startup scripts etc.
 
