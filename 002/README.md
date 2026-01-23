@@ -106,13 +106,14 @@ The incident responder is brought in to limit the spread and impact of the incid
 
 ***Containment: Endpoint***
 
-As per the playbook, the endpoint security solution was set to contain the system administrator's server. 
+As per the playbook, the endpoint security solution was set to contain the web server. 
 This isolates the endpoint from the rest of the subnet to both prevent the malware from spreading and prevent the attacker from pivoting into the internal network from the infected server.
 However, because this is a live web server, containment done must use very specific rules and processes to minimize service disruption. The plan must be carefully thought out during the preparation phase.
 For example, considerations include: 
 - During containment, is there a clean backup web server to failover to?
 - Can essential services on the web server still be online without increasing the risks on other systems?
 - What are the upstream and downstream dependencies that are going to be impacted during containment?
+- Full or partial containment? For example, connection to and from which IP addresses should still be allowed during containment.
 
 Since in the first place, an LFI vulnerability on the web application leaked the credentials, implement temporary patches to mitigate it in the short term.
 For long term, patch the vulnerability based on best practice.
