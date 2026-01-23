@@ -153,7 +153,7 @@ The lessons learned are structured in a format to address the stakeholder's key 
 I.	Has the web server already been compromised before the alert? <br>
 - Yes, the web server had been compromised prior to the alert from our endpoint security solution.
 - From the web server's access logs, SOC investigated that the attacker exploited a Local File Inclusion (LFI) vulnerability on the web server to leak credentials, which was then used to log into the Wordpress admin panel.
-- 
+  
 II.	Did the adversary breach into the internal network? <br>
 - Till date, there is no evidence indicating that the adversary pivoted to other internal systems beyond just accessing the compromised public-facing web server.
 - However, it is recommended to place the web server into a demilitarized zone (DMZ) of the enterprise network so that any external-facing services are accessible to the public Internet but remaining isolated from the internal network.
@@ -161,3 +161,4 @@ II.	Did the adversary breach into the internal network? <br>
 III.	What could have been done to detect/prevent this even before the ingestion of IOCs from external threat intelligence?
 - Highly recommend the use of a Web Application Firewall (WAF) security solution to detect and block network traffic with application-level attack signatures such as from LFI, SQL injections, XSS etc.
 - Based on criticality, ensure that security patches for all systems and applications must be implemented rapidly to mitigate risk as soon as possible.
+- If access to the WordPress admin panel from the Internet is neccessary for administrators, highly consider implementing the WordPress Multi-Factor Authentication (MFA/2FA) - https://wordpress.com/support/security/two-step-authentication/.
