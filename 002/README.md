@@ -79,7 +79,7 @@ In a chronological order, the analyst also observed a LFI exploitation 23[.]254[
 
 <img width="1234" height="532" alt="image" src="https://github.com/user-attachments/assets/e2e78a6d-73c7-4314-a03c-0062aa79db1d" />
 
-This incidates that there was a successful LFI exploitation which revealed web admin login credentials to the attacker. 
+This incidated that there was a LFI exploitation which revealed web admin login credentials to the attacker. 
 The analyst also tested this in the QA environment for the web server to verify this behaviour and prove the LFI vulnerability exist.
 <br>
 At this point of time, it is confirmed that the web server had been compromised.
