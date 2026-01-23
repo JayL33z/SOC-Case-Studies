@@ -18,7 +18,7 @@ III.	What could have been done to detect this even before the ingestion of IOCs 
 ### Identification source: SIEM
 
 SOC searched on the SIEM (Splunk Search) with a date/time range that covers the period which the match for the IP address was detected on the EDR.
-Then a general query with the specific index and host name for the web server in question.
+Then a general query with the specific index (XXXX-web) and host name (WEB-XXXX-01) for the web server in question.
 
 <br> Splunk Query: ```index="XXXX-web" host="WEB-XXXX-01" ``` <br>
 
@@ -36,7 +36,31 @@ Then SOC did a search for 23[.]254[.]226[.]90 on VirusTotal to check its reputat
 
 <img width="1024" height="534" alt="image" src="https://github.com/user-attachments/assets/6671b4a4-ea20-4a16-b684-5440a439f691" />
 
-From the above VT results, there is high confidence that web requests originates from an adversary at the time of investigation.
+From the above VT results, there is high confidence that web requests originates from a less reputable IP address at the time of investigation.
+
+However, since the server's web service is exposed to the public Internet to serve its function hosting the website, having high traffic volume from less reputable public IP addresses may not neccessarily indicate a true positive incident.
+Therefore, the analyst investigated further to find concrete evidence of compromise.
+
+The analyst further queried and piped the results to be formatted into a table with useful fields for HTTP requests using the fields table _time, clientip, method, uri, useragent, and sort them in chronological order using sort _time.
+
+
+<br> Splunk Query: 
+```index="XXXX-web" host="WEB-XXXX-01" clientip="23.254.226.90" | table _time, clientip, method, uri, useragent | sort _time ``` <br>
+<img width="1611" height="713" alt="image" src="https://github.com/user-attachments/assets/d3050f03-d58a-4c9d-8f89-45cdf4d40968" />
+
+There is useragent field “WPScan v3.8.25 (https://wpscan.com/wordpress-security-scanner)”. This indicates the use of vulnerability scanner on the web server. 
+Then the analyst used the useragent field as a point of reference to further investigate by listing out the top five user agents.
+
+
+<br> Splunk Query: 
+```index="XXXX-web" host="WEB-XXXX-01" clientip="23.254.226.90" | table _time, clientip, method, uri, useragent | sort _time | top limit=5 useragent``` <br>
+<img width="1645" height="378" alt="image" src="https://github.com/user-attachments/assets/17fb8c74-fd73-4f47-a490-194d0e3e5553" />
+
+The above query output indicated that most web traffic comes from WPScan and GoBuster (software tool for brute forcing directories on web servers). Legitimate user web traffic should not have user agents as such, unless there is malicious intent.
+
+With the IP address’ negative reputation on VirusTotal, along with evidence of significant traffic indicating both vulnerability scanning and web directory brute forcing, this confirms that 23[.]254[.]226[.]90 is indeed an adversary’s IP probing on the webserver.
+
+
 
 ### 2.2. Containment
 ### 2.3. Eradication
